@@ -141,7 +141,7 @@ resource container 'containers' = [
 
 ## C# Deployment
 
-To deploy your actual code, inside an Azure DevOps environment, build and deploy steps differ greatly.
+To deploy your actual code inside an Azure DevOps environment, deploy steps will be very similar, but build steps differ greatly.
 
 ### Build steps
 
@@ -170,26 +170,11 @@ To deploy your actual code, inside an Azure DevOps environment, build and deploy
 
 ### Deploy steps
 
-Deployment makes use of the [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-core-tools-reference?tabs=v2) instead of the [Azure Functions Deploy task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines).
+Deployment makes use of the [Azure Functions Deploy task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines), with some small changes:
 
-- remove the `AzureFunctionApp@2` task.
-- add deploy tasks that looks like this:
-
-```yaml
-- task: FuncToolsInstaller@0
-  inputs:
-    version: 'latest'
-
-- task: AzurePowerShell@5
-  displayName: Azure Function App Deploy
-  inputs:
-    azureSubscription: SC-Sandbox
-    azurePowerShellVersion: LatestVersion
-    ScriptType: "InlineScript"
-    Inline: |
-    cd "$(Pipeline.Workspace)/drop/dotnet"
-    func azure functionapp publish "func-hello-001" --dotnet-isolated
-```
+- add the `isFlexConsumption` input and set to `true`.
+- leave the `deploymentMethod` input at default value `auto`, instead of `zipDeploy` or `runFromPackage`.
+- leave the `deployToSlotOrASE` input at default value `false`, instead of `true`.
 
 ## License
 
