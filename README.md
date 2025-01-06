@@ -141,55 +141,16 @@ resource container 'containers' = [
 
 ## C# Deployment
 
-To deploy your actual code, inside an Azure DevOps environment, build and deploy steps differ greatly.
-
-### Build steps
-
-- optionally: remove the `DotNetCoreCLI` build task, i would recommend still building your project inside your CI/CD, to keep sanity checks and tests in place.
-- remove the `DotNetCoreCLI` publish task, it might have looked like this:
-
-```yaml
-- task: DotNetCoreCLI@2
-  displayName: "dotnet publish"
-  inputs:
-    command: publish
-    ...
-```
-
-- remove any zip task you might had, your build artifact should be made like this:
-
-```yaml
-- task: CopyFiles@2
-  displayName: copy to staging dir
-  inputs:
-    sourceFolder: "$(System.DefaultWorkingDirectory)/${{ parameters.projectFolderName }}"
-    contents: "*"
-    targetFolder: "$(Build.ArtifactStagingDirectory)/dotnet"
-    overWrite: true # optional
-```
+To deploy your actual code inside an Azure DevOps environment, deploy steps will be very similar.
 
 ### Deploy steps
 
-Deployment makes use of the [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-core-tools-reference?tabs=v2) instead of the [Azure Functions Deploy task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines).
+Deployment makes use of the [Azure Functions Deploy task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-function-app-v2?view=azure-pipelines), with some small changes:
 
-- remove the `AzureFunctionApp@2` task.
-- add deploy tasks that looks like this:
-
-```yaml
-- task: FuncToolsInstaller@0
-  inputs:
-    version: 'latest'
-
-- task: AzurePowerShell@5
-  displayName: Azure Function App Deploy
-  inputs:
-    azureSubscription: SC-Sandbox
-    azurePowerShellVersion: LatestVersion
-    ScriptType: "InlineScript"
-    Inline: |
-    cd "$(Pipeline.Workspace)/drop/dotnet"
-    func azure functionapp publish "func-hello-001" --dotnet-isolated
-```
+- add the `isFlexConsumption` input and set to `true`.
+- leave the `deploymentMethod` input at default value `auto` (or omit this setting), instead of `zipDeploy` or `runFromPackage`.
+- leave the `deployToSlotOrASE` input at default value `false` (or omit this setting), instead of `true`.
+- set the `appType` to `functionAppLinux`.
 
 ## License
 
