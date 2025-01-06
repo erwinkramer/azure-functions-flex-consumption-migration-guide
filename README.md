@@ -106,7 +106,7 @@ That's all there is to it! You can isolate your storage account completely with 
 
 ## Deployment
 
-To deploy a C# app, or any other language app, it's completely different to what you are used to, zip deploy isn't what it used to be anymore. You will still deploy to the Function App, but without building and zipping your project fist. The app will manage all deployments in a storage account using a container. In a Premium plan, managing deployments used to be within a file share:
+To deploy a C# app, or any other language app, it's completely different to what you are used to, zip deploy isn't what it used to be anymore. You will still zip, but the internal logic will unzip itself. The app will manage all deployments in a storage account using a container. In a Premium plan, managing deployments used to be within a file share:
 
 - delete app setting `WEBSITE_RUN_FROM_PACKAGE`.
 - if coming from a premium plan: delete app setting `WEBSITE_CONTENTSHARE`.
