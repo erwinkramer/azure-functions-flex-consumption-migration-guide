@@ -95,6 +95,7 @@ resource networkConfig 'Microsoft.Web/sites/networkConfig@2023-01-01' = {
 
 - add `properties.virtualNetworkSubnetId`=`appServicePlanSubnetId` to `Microsoft.Web/sites`
 - change delegation of the subnet, so for the resource `Microsoft.Network/virtualNetworks/subnets`; `properties.delegations.properties.serviceName` used to be `Microsoft.Web/serverFarms`, now it is `Microsoft.App/environments`.
+- register the `Microsoft.App` [resource provider](https://learn.microsoft.com/azure/azure-resource-manager/management/azure-services-resource-providers#container-resource-providers) on subscription level.
 
 ### VNet-based backend connections
 
